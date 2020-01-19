@@ -23,14 +23,12 @@ class AddPhoto extends Component{
         comment:''
     }
     pickImage=()=>{
-        // if(!this.props.name ){
-        //     Alert.alert('Falha',noUser)
-        //     return 
-        // }
+        if(!this.props.name ){
+            Alert.alert('Falha',noUser)
+            return 
+        }
         ImagePicker.showImagePicker({
             title:strAddPhoto.chooseImg,
-            maxHeight:600,
-            maxWidth:1800,
             quality:1
         },res=>{
             if(!res.didCancel){
@@ -39,6 +37,23 @@ class AddPhoto extends Component{
         }
         )
     }
+    createFormData = (photo, body) => {
+        const data = new FormData();
+      
+        data.append("file", {
+          name: photo.fileName,
+          type: photo.type,
+          uri:
+            Platform.OS === "android" ? photo.uri : photo.uri.replace("file://", "")
+        });
+      
+        Object.keys(body).forEach(key => {
+          data.append(key, body[key]);
+        });
+      
+        return data;
+      };
+      
     save = async ()=>{
         console.log('funcao salva img')
         if(!this.props.name ){
@@ -59,6 +74,25 @@ class AddPhoto extends Component{
 
         this.setState({image:null,comment:''}) // limpando a imagem atual na tela
         this.props.navigation.navigate('Feed') // navego automaticamente para feed
+
+        // fetch("http://6999a188.ngrok.io/UPLOAD/", {
+        //     method: "POST",
+        //     headers:{
+        //         'Authorization':'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IlRlc3RlQHRlc3RlLmNvbSIsImV4cCI6MTU4Njk5OTgzNH0.27xel4oqu4oT7HZkW8C3TQUgw8IggEoDO7IORdpdkK4'
+        //     },
+        //     body: this.createFormData(this.state.photo, {})
+        // })
+        // .then(response => response.json())
+        // .then(response => {
+        //     console.log("upload succes", response);
+        //     alert("Upload success!");
+        //     // this.setState({ photo: null });
+        // })
+        // .catch(error => {
+        //     console.log("upload error", error);
+        //     alert("Upload failed!");
+        // });
+
     }
     render(){
         return(

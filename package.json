@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "axios": "0.18.0",
+    "firebase-tools": "^7.15.1",
     "react": "16.4.1",
     "react-native": "0.56.0",
     "react-native-gravatar": "1.0.2",
@@ -27,8 +28,8 @@
   "jest": {
     "preset": "react-native"
   },
-  "rnpm":{
-    "assets":[
+  "rnpm": {
+    "assets": [
       "./assets/fonts/"
     ]
   }

@@ -9,7 +9,9 @@ import Register from '../screens/Register'
 import Profile from '../screens/Profile'
 import AddPhoto from '../screens/AddPhoto'
 import Login from '../screens/Login'
+import Splash from '../screens/Splash'
 //
+// import configFirebase from '../utils/config/configFirebase'
 const iconSize = 30
 
 const authRouter = createStackNavigator({
@@ -71,4 +73,11 @@ const MenuConfig={
 
 const MenuNavigator =createBottomTabNavigator(MenuRoutes,MenuConfig)
 
-export default MenuNavigator
+// export default MenuNavigator
+const stackRouter = createSwitchNavigator({
+    Splash:Splash,
+    App:MenuNavigator
+},{
+    initialRouteName:'Splash'
+})
+export default  stackRouter

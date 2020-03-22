@@ -22,6 +22,16 @@ class AddPhoto extends Component{
         image:null,
         comment:''
     }
+
+    componentDidUpdate = prevProps =>{
+        if(prevProps.loading && !this.props.loading){
+            this.setState({
+                image:null,
+                comment:''
+            })
+            this.props.navigation.navigate('Feed')
+        }
+    }
     pickImage=()=>{
         if(!this.props.name ){
             Alert.alert('Falha',noUser)
@@ -50,7 +60,7 @@ class AddPhoto extends Component{
         Object.keys(body).forEach(key => {
           data.append(key, body[key]);
         });
-      
+        console.log('data::',data)
         return data;
       };
       
@@ -60,7 +70,7 @@ class AddPhoto extends Component{
             Alert.alert('Falha',noUser)
             return 
         } 
-        this.props.onAddPost({
+        await this.props.onAddPost({
             // envia p Redux
             id:Math.random(),
             nickname:this.props.name,
@@ -72,10 +82,10 @@ class AddPhoto extends Component{
             }]
         })
 
-        this.setState({image:null,comment:''}) // limpando a imagem atual na tela
-        this.props.navigation.navigate('Feed') // navego automaticamente para feed
-
-        // fetch("http://6999a188.ngrok.io/UPLOAD/", {
+        // this.setState({image:null,comment:''}) // limpando a imagem atual na tela
+        // this.props.navigation.navigate('Feed') // navego automaticamente para feed
+        // console.log('indo chamar o server...')
+        // fetch("http://c7bf99e6.ngrok.io/UPLOAD/", {
         //     method: "POST",
         //     headers:{
         //         'Authorization':'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IlRlc3RlQHRlc3RlLmNvbSIsImV4cCI6MTU4Njk5OTgzNH0.27xel4oqu4oT7HZkW8C3TQUgw8IggEoDO7IORdpdkK4'
@@ -83,9 +93,10 @@ class AddPhoto extends Component{
         //     body: this.createFormData(this.state.photo, {})
         // })
         // .then(response => response.json())
-        // .then(response => {
-        //     console.log("upload succes", response);
+        // .then(response => {     
+        //     console.log("upload success", response);
         //     alert("Upload success!");
+        //     console.log(response)
         //     // this.setState({ photo: null });
         // })
         // .catch(error => {
@@ -111,8 +122,14 @@ class AddPhoto extends Component{
                         value={this.state.comment}
                         onChangeText={comment=>this.setState({comment})}
                     />
-                    <TouchableOpacity onPress={this.save} style={styles.buttom}>
-                        <Text style={styles.buttomText}>{strAddPhoto.save}</Text>
+                    <TouchableOpacity 
+                        onPress={this.save}
+                        style={styles.buttom}
+                        disabled={this.props.loading}
+                        >
+                        <Text style={[styles.buttomText,this.props.loading?styles.buttomDisabled:null]}>
+                            {strAddPhoto.save}
+                        </Text>
                     </TouchableOpacity>
                 </View>
             </ScrollView>
@@ -152,16 +169,20 @@ const styles = StyleSheet.create({
     input:{
         marginTop:20,
         width:'90%'
+    },
+    buttomDisabled:{
+        backgroundColor:'#AAA'
     }
 })
 
 // export default AddPhoto
 
-const mapStateToProps= ({user})=>{
+const mapStateToProps= ({user,posts})=>{
     // pega informacoes do redux e joga pra esse componente
     return{
         email:user.email,
-        name:user.name
+        name:user.name,
+        loading:posts.isUploading
     }
 }
 
